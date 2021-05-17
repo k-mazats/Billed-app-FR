@@ -1,6 +1,8 @@
 import { screen } from "@testing-library/dom"
 import BillsUI from "../views/BillsUI.js"
 import { bills } from "../fixtures/bills.js"
+import ErrorPage from "./ErrorPage.js";
+import LoadingPage from "../views/LoadingPage.js";
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
@@ -18,4 +20,18 @@ describe("Given I am connected as an employee", () => {
       expect(dates).toEqual(datesSorted)
     })
   })
+  describe("When I am loading Bills Page", () => {
+		test("Then I should land on a loading page", () => {
+			const billsHtml = BillsUI({ data: [], loading: true});
+			const loadingHtml = LoadingPage();
+			expect(billsHtml.indexOf(loadingHtml) === -1).toBeTruthy();
+		});
+	})
+  // describe("When there is an error", () => {
+	// 	test("Then I should land on an error page", () => {
+	// 		const billsHtml = BillsUI({ data: [], loading: true });
+	// 		const loadingHtml = LoadingPage();
+	// 		expect(billsHtml.indexOf(loadingHtml) > -1).toBeTruthy();
+	// 	});
+	// })
 })
