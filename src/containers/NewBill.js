@@ -23,7 +23,11 @@ export default class NewBill {
 		const fileName = filePath[filePath.length - 1];
 		const fileExtension = fileName.split(".").pop();
 		const validExtensions = ["jpg", "jpeg", "png"];
+
 		if (validExtensions.includes(fileExtension)) {
+			if (e.target.classList.contains("is-invalid")) {
+				e.target.classList.remove("is-invalid");
+			}
 			this.firestore.storage
 				.ref(`justificatifs/${fileName}`)
 				.put(file)
@@ -32,6 +36,8 @@ export default class NewBill {
 					this.fileUrl = url;
 					this.fileName = fileName;
 				});
+		} else {
+			e.target.classList.add("is-invalid");
 		}
 	};
 	handleSubmit = (e) => {
@@ -57,9 +63,8 @@ export default class NewBill {
 		};
 		if (this.fileName !== null) {
 			this.createBill(bill);
-      this.onNavigate(ROUTES_PATH["Bills"]);
-		};
-		
+			this.onNavigate(ROUTES_PATH["Bills"]);
+		}
 	};
 
 	// not need to cover this function by tests
