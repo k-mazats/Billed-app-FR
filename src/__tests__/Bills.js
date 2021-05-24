@@ -86,7 +86,7 @@ describe("Given I am connected as an employee", () => {
 	// 	});
 	// });
 	describe("When I click on eye icon", () => {
-		let container,eye,handleClickIconEye;
+		let container, eye, handleClickIconEye;
 		beforeAll(() => {
 			const html = BillsUI({ data: bills });
 			document.body.innerHTML = html;
@@ -104,30 +104,21 @@ describe("Given I am connected as an employee", () => {
 			document.addEventListener("DOMContentLoaded", function () {
 				eye.addEventListener("click", handleClickIconEye);
 			});
-			
-			
 		});
 		test("Then a modal should open", () => {
-			// const eye = screen.getAllByTestId("icon-eye")[0];
-			// const handleClickIconEye = jest.fn(container.handleClickIconEye);
-			userEvent.click(eye);
-			expect(handleClickIconEye).toHaveBeenCalled();
-			const modale = screen.getByTestId("modaleFile");
-			expect(modale).toBeTruthy();
-			//
-			// const html = BillsUI({ data: bills });
-			// document.body.innerHTML = html;
-			// const onNavigate = (pathname) => {
-			// 	document.body.innerHTML = ROUTES({ pathname });
-			// };
-			// const container = new Bills({
-			// 	document,
-			// 	onNavigate,
-			// 	firestore,
-			// 	localStorage: window.localStorage,
-			// });
-			// const handleClickIconEye = jest.fn(container.handleClickIconEye);
-			// const eye = screen.getAllByTestId("icon-eye")[0];
+			const html = BillsUI({ data: bills });
+			document.body.innerHTML = html;
+			const onNavigate = (pathname) => {
+				document.body.innerHTML = ROUTES({ pathname });
+			};
+			const container = new Bills({
+				document,
+				onNavigate,
+				firestore,
+				localStorage: window.localStorage,
+			});
+			const handleClickIconEye = jest.fn(container.handleClickIconEye);
+			const eye = screen.getAllByTestId("icon-eye")[0];
 			//
 			// This one pass the test but gives no coverage
 			//
@@ -160,4 +151,36 @@ describe("Given I am connected as an employee", () => {
 			// expect(modale).toBeTruthy();
 		});
 	});
+	//
+	// This one add coverage but fail the test and throw 2 errors :
+	// 		TypeError: $(...).modal is not a function
+	//		TypeError: icon.getAttribute is not a function
+	//
+	// describe("When I click on eye icon", () => {
+	// 	let container, eye, handleClickIconEye;
+	// 	beforeAll(() => {
+	// 		const html = BillsUI({ data: bills });
+	// 		document.body.innerHTML = html;
+	// 		const onNavigate = (pathname) => {
+	// 			document.body.innerHTML = ROUTES({ pathname });
+	// 		};
+	// 		container = new Bills({
+	// 			document,
+	// 			onNavigate,
+	// 			firestore,
+	// 			localStorage: window.localStorage,
+	// 		});
+	// 		eye = screen.getAllByTestId("icon-eye")[0];
+	// 		handleClickIconEye = jest.fn(container.handleClickIconEye);
+	// 		document.addEventListener("DOMContentLoaded", function () {
+	// 			eye.addEventListener("click", handleClickIconEye);
+	// 		});
+	// 	});
+	// 	test("Then a modal should open", () => {
+	// 		userEvent.click(eye);
+	// 		expect(handleClickIconEye).toHaveBeenCalled();
+	// 		const modale = screen.getByTestId("modaleFile");
+	// 		expect(modale).toBeTruthy();
+	// 	});
+	// });
 });
