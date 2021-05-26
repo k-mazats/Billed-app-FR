@@ -84,107 +84,30 @@ describe("Given I am connected as an employee", () => {
 			expect(screen.getByTestId("form-new-bill") !== undefined).toBeTruthy();
 		});
 	});
-	// describe("When I click on eye icon", () => {
-	// 	test("Then it should open the bill modal with corresponding content", async () => {
-	// 		const html = BillsUI({ data: bills });
-	// 		document.body.innerHTML = html;
-	// 		const onNavigate = (pathname) => {
-	// 			document.body.innerHTML = ROUTES({ pathname });
-	// 		};
-	// 		const container = new Bills({
-	// 			document,
-	// 			onNavigate,
-	// 			firestore,
-	// 			localStorage: window.localStorage,
-	// 		});
-	// 		const iconEye = screen.getAllByTestId('icon-eye');
-	// 		const eye = iconEye[0]
-	// 		userEvent.click(eye)
-	// 		console.log(eye.outerHTML)
-	// 	});
-	// });
+	describe("When I click on eye icon", () => {
+		test("Then it should open the bill modal with corresponding content", async () => {
+			const html = BillsUI({ data: bills });
+			document.body.innerHTML = html;
+			const onNavigate = (pathname) => {
+				document.body.innerHTML = ROUTES({ pathname });
+			};
+			const container = new Bills({
+				document,
+				onNavigate,
+				firestore,
+				localStorage: window.localStorage,
+			});
+
+			const iconEye = screen.getAllByTestId("icon-eye");
+			const eye = iconEye[0];
+			const modaleTrigger = jest.fn(container.handleClickIconEye);
+			eye.addEventListener("click",modaleTrigger(eye) ); //fail here
+			userEvent.click(eye);
+			expect(modaleTrigger).toHaveBeenCalled();
+			const modale = screen.getByTestId("modaleFile");
+
+			expect(modale.classList.contains("show")).toBeTruthy();
+			
+		});
+	});
 });
-
-// describe("When I click on eye icon", () => {
-// 	test("Then a modal should open", () => {
-// 		const html = BillsUI({ data: bills });
-// 		document.body.innerHTML = html;
-// 		const onNavigate = (pathname) => {
-// 			document.body.innerHTML = ROUTES({ pathname });
-// 		};
-// 		const container = new Bills({
-// 			document,
-// 			onNavigate,
-// 			firestore,
-// 			localStorage: window.localStorage,
-// 		});
-// 		const modalTrigger = jest.fn();
-// 		const modale = screen.getByTestId("modaleFile");
-// 		const eye = document.querySelector(`div[data-testid="icon-eye"]`);
-// 		eye.addEventListener("click", (e) => {
-// 			container.handleClickIconEye(eye);
-// 		});
-// 		userEvent.click(eye);
-
-// expect(modalTrigger).toHaveBeenCalled();
-
-// expect(modale).toBeTruthy();
-//
-// This one pass the test but gives no coverage
-//
-// document.addEventListener("DOMContentLoaded", function () {
-// eye.addEventListener("click", handleClickIconEye);
-// userEvent.click(eye);
-// expect(handleClickIconEye).toHaveBeenCalled();
-// const modale = screen.getByTestId("modaleFile");
-// expect(modale).toBeTruthy();
-// })
-//
-// This one fail the test but gives coverage
-//
-// document.addEventListener("DOMContentLoaded", function () {
-// eye.addEventListener("click", handleClickIconEye);
-// });
-// userEvent.click(eye);
-// expect(handleClickIconEye).toHaveBeenCalled();
-// const modale = screen.getByTestId("modaleFile");
-// expect(modale).toBeTruthy();
-//
-// This one add coverage but fail the test and throw 2 errors :
-// 		TypeError: $(...).modal is not a function
-//		TypeError: icon.getAttribute is not a function
-//
-// });
-//
-// This one add coverage but fail the test and throw 2 errors :
-// 		TypeError: $(...).modal is not a function
-//		TypeError: icon.getAttribute is not a function
-//
-// describe("When I click on eye icon", () => {
-// 	let container, eye, handleClickIconEye;
-// 	beforeAll(() => {
-// 		const html = BillsUI({ data: bills });
-// 		document.body.innerHTML = html;
-// 		const onNavigate = (pathname) => {
-// 			document.body.innerHTML = ROUTES({ pathname });
-// 		};
-// 		container = new Bills({
-// 			document,
-// 			onNavigate,
-// 			firestore,
-// 			localStorage: window.localStorage,
-// 		});
-// 		eye = screen.getAllByTestId("icon-eye")[0];
-// 		handleClickIconEye = jest.fn(container.handleClickIconEye);
-// 		document.addEventListener("DOMContentLoaded", function () {
-// 			eye.addEventListener("click", handleClickIconEye);
-// 		});
-// 	});
-// 	test("Then a modal should open", () => {
-// 		userEvent.click(eye);
-// 		expect(handleClickIconEye).toHaveBeenCalled();
-// 		const modale = screen.getByTestId("modaleFile");
-// 		expect(modale).toBeTruthy();
-// 	});
-// });
-// });
