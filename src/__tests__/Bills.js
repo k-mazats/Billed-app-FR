@@ -101,13 +101,17 @@ describe("Given I am connected as an employee", () => {
 			const iconEye = screen.getAllByTestId("icon-eye");
 			const eye = iconEye[0];
 			const modaleTrigger = jest.fn(container.handleClickIconEye);
-			eye.addEventListener("click",modaleTrigger(eye) ); //fail here
+			eye.addEventListener("click", () => {
+				modaleTrigger(eye);
+			});
 			userEvent.click(eye);
 			expect(modaleTrigger).toHaveBeenCalled();
 			const modale = screen.getByTestId("modaleFile");
-
-			expect(modale.classList.contains("show")).toBeTruthy();
-			
+			expect(global.$.fn.modal).toHaveBeenCalledWith("show");
+			const billUrl = eye.getAttribute("data-bill-url").split("?")[0];
+			expect(modale.innerHTML.includes(billUrl)).toBeTruthy();
+			expect(modale).toBeTruthy();
+			console.log(modale.outerHTML);
 		});
 	});
 });

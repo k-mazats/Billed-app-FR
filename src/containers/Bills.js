@@ -32,9 +32,7 @@ export default class {
 			.html(
 				`<div style='text-align: center;'><img width=${imgWidth} src=${billUrl} /></div>`
 			);
-		// if (typeof $("#modaleFileAdmin1").modal === "function") {
 			$("#modaleFile").modal("show");
-		// }
 	};
 
 	// not need to cover this function by tests
