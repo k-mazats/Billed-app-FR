@@ -1,6 +1,5 @@
-import $ from 'jquery';
-import Modal from 'bootstrap'
-
+import $ from "jquery";
+// import 'bootstrap'
 global.$ = global.jQuery = $;
-global.$.fn.modal = jest.fn(Modal)
+require("bootstrap")
 
