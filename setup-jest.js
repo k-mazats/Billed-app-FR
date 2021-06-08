@@ -1,5 +1,4 @@
 import $ from "jquery";
-// import 'bootstrap'
+import "bootstrap";
 global.$ = global.jQuery = $;
-require("bootstrap")
 

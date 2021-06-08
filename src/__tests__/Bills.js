@@ -3,8 +3,8 @@ import userEvent from "@testing-library/user-event";
 
 import { ROUTES, ROUTES_PATH } from "../constants/routes";
 
+import router from "../__mocks__/router.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
-import firebase from "../__mocks__/firebase.js";
 
 import { bills } from "../fixtures/bills.js";
 
@@ -15,14 +15,10 @@ import BillsUI from "../views/BillsUI.js";
 import Bills from "../containers/Bills.js";
 
 describe("Given I am connected as an employee", () => {
-	beforeEach(() => {});
 	describe("When I am on Bills Page", () => {
 		test("Then bill icon in vertical layout should be highlighted", () => {
 			Object.defineProperty(window, "localStorage", {
 				value: localStorageMock,
-			});
-			Object.defineProperty(window, "firebase", {
-				value: firebase,
 			});
 			window.localStorage.setItem(
 				"user",
@@ -30,32 +26,9 @@ describe("Given I am connected as an employee", () => {
 					type: "Employee",
 				})
 			);
-			const onNavigate = (pathname) => {
-				document.body.innerHTML = ROUTES({ pathname });
-			};
-			const router = () => {
-				const rootDiv = document.getElementById("root");
-				rootDiv.innerHTML = ROUTES({ pathname: window.location.pathname });
-				if (window.location.hash === ROUTES_PATH["Bills"]) {
-					rootDiv.innerHTML = ROUTES({
-						pathname: window.location.hash,
-						loading: true,
-					});
-					const divIcon1 = document.getElementById("layout-icon1");
-					const divIcon2 = document.getElementById("layout-icon2");
-					divIcon1.classList.add("active-icon");
-					divIcon2.classList.remove("active-icon");
-					const bills = new Bills({
-						document,
-						onNavigate,
-						firestore,
-						localStorage,
-					});
-				}
-			};
 			let root = document.createElement("div");
 			root.setAttribute("id", "root");
-			window.location.assign("#employee/bills");
+			window.location.assign(ROUTES_PATH["Bills"]);
 			document.body.appendChild(root);
 			router();
 			const billsIcon = screen.getByTestId("icon-window");
@@ -112,37 +85,44 @@ describe("Given I am connected as an employee", () => {
 			expect(screen.getByTestId("form-new-bill") !== undefined).toBeTruthy();
 		});
 	});
-	// describe("When I click on eye icon", () => {
-	// 	test("Then it should open the bill modal with corresponding content", () => {
-	// 		const html = BillsUI({ data: bills });
-	// 		document.body.innerHTML = html;
-	//
-	// 		const container = new Bills({
-	// 			document,
-	// 			onNavigate,
-	// 			firestore,
-	// 			localStorage: window.localStorage,
-	// 		});
+	describe("When I click on eye icon", () => {
+		test("Then it should open the bill modal with corresponding content", () => {
+			const html = BillsUI({ data: bills });
+			document.body.innerHTML = html;
+			const onNavigate = (pathname) => {
+				document.body.innerHTML = ROUTES({ pathname });
+			};
+			const container = new Bills({
+				document,
+				onNavigate,
+				firestore,
+				localStorage: window.localStorage,
+			});
 
-	// 		const iconEye = screen.getAllByTestId("icon-eye");
-	// 		const eye = iconEye[0];
-	// 		const modaleTrigger = jest.fn(container.handleClickIconEye);
-	// 		const modaleBootstrapFn = jest.fn(global.$.fn.modal);
-	// 		eye.addEventListener("click", () => {
-	// 			modaleTrigger(eye);
-	// 		});
-	// 		document.addEventListener("show", () => {
-	// 			console.log("modale is working");
-	// 		});
-	// 		userEvent.click(eye);
-	// 		expect(modaleTrigger).toHaveBeenCalled();
-	// 		const modale = screen.getByTestId("modaleFile");
-	// 		const billUrl = eye.getAttribute("data-bill-url").split("?")[0];
-	// 		expect(modale.innerHTML.includes(billUrl)).toBeTruthy();
-	// 		expect(modale).toBeTruthy();
-
-	// 		console.log(global.$.fn.modal.toString());
-	// 		expect(modaleBootstrapFn).toHaveBeenCalled();
-	// 	});
-	// });
+			const iconEye = screen.getAllByTestId("icon-eye");
+			const eye = iconEye[0];
+			const modaleTrigger = jest.fn(container.handleClickIconEye);
+			
+			eye.addEventListener("click", () => {
+				modaleTrigger(eye);
+			});
+			// document.addEventListener("show", () => {
+			// 	console.log("modale is working");
+			// });
+			userEvent.click(eye);
+			expect(modaleTrigger).toHaveBeenCalled();
+			const modale = screen.getByTestId("modaleFile");
+			const billUrl = eye.getAttribute("data-bill-url").split("?")[0];
+			expect(modale.innerHTML.includes(billUrl)).toBeTruthy();
+			expect(modale).toBeTruthy();
+			const modaleBootstrapFn = jest.fn($("#modaleFile").modal);
+			
+				
+				// console.log($("#modaleFile").modal);
+				// console.log(global.$.fn.modal)
+			
+			
+			expect(modaleBootstrapFn).toHaveBeenCalled();
+		});
+	});
 });

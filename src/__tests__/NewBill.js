@@ -15,43 +15,22 @@ import NewBill from "../containers/NewBill.js";
 describe("Given I am connected as an employee", () => {
 	describe("When I am on NewBill Page", () => {
 		test("Then new bill icon in vertical layout should be highlighted", () => {
-			Object.defineProperty(window, "localStorage", {
-				value: localStorageMock,
-			});
-			Object.defineProperty(window, "firebase", {
-				value: firebase,
-			});
-			window.localStorage.setItem(
-				"user",
-				JSON.stringify({
-					type: "Employee",
-				})
-			);
-			const onNavigate = (pathname) => {
-				document.body.innerHTML = ROUTES({ pathname });
-			};
-			const router = () => {
-				const rootDiv = document.getElementById("root");
-				rootDiv.innerHTML = ROUTES({ pathname: window.location.pathname });
-				if (window.location.hash === ROUTES_PATH["NewBill"]) {
-					rootDiv.innerHTML = ROUTES({
-						pathname: window.location.hash,
-						loading: true,
-					});
-					new NewBill({ document, onNavigate, firestore, localStorage });
-					const divIcon1 = document.getElementById("layout-icon1");
-					const divIcon2 = document.getElementById("layout-icon2");
-					divIcon1.classList.remove("active-icon");
-					divIcon2.classList.add("active-icon");
-				}
-			};
-			let root = document.createElement("div");
-			root.setAttribute("id", "root");
-			window.location.assign("#employee/bill/new");
-			document.body.appendChild(root);
-			router();
-			const newBillIcon = screen.getByTestId("icon-mail");
-			expect(newBillIcon.classList.contains("active-icon")).toBeTruthy();
+		Object.defineProperty(window, "localStorage", {
+			value: localStorageMock,
+		});
+		window.localStorage.setItem(
+			"user",
+			JSON.stringify({
+				type: "Employee",
+			})
+		);
+		let root = document.createElement("div");
+		root.setAttribute("id", "root");
+		window.location.assign(ROUTES_PATH["NewBill"]);
+		document.body.appendChild(root);
+		router();
+		const billsIcon = screen.getByTestId("icon-mail");
+		expect(billsIcon.classList.contains("active-icon")).toBeTruthy();
 		});
 		// describe("When I select a file through the file input", () => {
 		// const html = NewBillUI();
