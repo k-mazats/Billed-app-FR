@@ -144,11 +144,11 @@ export default class {
 			$(`#status-bills-container${this.index}`).html("");
 			this.counter++;
 		}
-
-		bills.forEach((bill) => {
+const currentFilteredBills = filteredBills(bills, getStatus(this.index));
+		currentFilteredBills.forEach((bill) => {
 			$(`#open-bill${bill.id}`)
 				.off("click")
-				.on("click",(e) => this.handleEditTicket(e, bill, bills));
+				.on("click", (e) => this.handleEditTicket(e, bill, bills));
 		});
 
 		
