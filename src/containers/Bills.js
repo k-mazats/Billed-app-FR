@@ -36,6 +36,7 @@ export default class {
 	};
 
 	// not need to cover this function by tests
+	/* istanbul ignore next */
 	getBills = () => {
 		const userEmail = localStorage.getItem("user")
 			? JSON.parse(localStorage.getItem("user")).email

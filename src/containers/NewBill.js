@@ -9,9 +9,9 @@ export default class NewBill {
 		const formNewBill = this.document.querySelector(
 			`form[data-testid="form-new-bill"]`
 		);
-		formNewBill.addEventListener("submit", this.handleSubmit);
+		formNewBill.addEventListener('submit', this.handleSubmit);
 		const file = this.document.querySelector(`input[data-testid="file"]`);
-		file.addEventListener("change", this.handleChangeFile);
+		file.addEventListener('change', this.handleChangeFile);
 		this.fileUrl = null;
 		this.fileName = null;
 		new Logout({ document, localStorage, onNavigate });
@@ -20,11 +20,11 @@ export default class NewBill {
 		const file = this.document.querySelector(`input[data-testid="file"]`)
 			.files[0];
 		const fileExtension = file.name.split('.').pop();
-		const validExtensions = ["jpg", "jpeg", "png"];
+		const validExtensions = ['jpg', 'jpeg', 'png'];
 
 		if (validExtensions.includes(fileExtension)) {
-			if (e.target.classList.contains("is-invalid")) {
-				e.target.classList.remove("is-invalid");
+			if (e.target.classList.contains('is-invalid')) {
+				e.target.classList.remove('is-invalid');
 			}
 			this.firestore.storage
 				.ref(`justificatifs/${file.name}`)
@@ -35,12 +35,12 @@ export default class NewBill {
 					this.fileName = file.name;
 				});
 		} else {
-			e.target.classList.add("is-invalid");
+			e.target.classList.add('is-invalid');
 		}
 	};
 	handleSubmit = (e) => {
 		e.preventDefault();
-		const email = JSON.parse(localStorage.getItem("user")).email;
+		const email = JSON.parse(localStorage.getItem('user')).email;
 		const bill = {
 			email,
 			type: e.target.querySelector(`select[data-testid="expense-type"]`).value,
@@ -57,22 +57,23 @@ export default class NewBill {
 				.value,
 			fileUrl: this.fileUrl,
 			fileName: this.fileName,
-			status: "pending",
+			status: 'pending',
 		};
 		if (this.fileName !== null) {
 			this.createBill(bill);
-			this.onNavigate(ROUTES_PATH["Bills"]);
+			this.onNavigate(ROUTES_PATH['Bills']);
 		}
 	};
 
 	// not need to cover this function by tests
+	/* istanbul ignore next */
 	createBill = (bill) => {
 		if (this.firestore) {
 			this.firestore
 				.bills()
 				.add(bill)
 				.then(() => {
-					this.onNavigate(ROUTES_PATH["Bills"]);
+					this.onNavigate(ROUTES_PATH['Bills']);
 				})
 				.catch((error) => error);
 		}

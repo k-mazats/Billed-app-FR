@@ -6,6 +6,7 @@ import { ROUTES, ROUTES_PATH } from "../constants/routes";
 import { localStorageMock } from "../__mocks__/localStorage.js";
 import router from '../__mocks__/router.js';
 import firebase from "../__mocks__/firebase.js";
+import BillsUI from '../views/BillsUI.js';
 
 import NewBillUI from "../views/NewBillUI.js";
 
@@ -100,5 +101,46 @@ describe("Given I am connected as an employee", () => {
 		});
 	});
 	});
-	
+	describe('When I post a bill', () => {
+		test('number of bills fetched should be increased of 1', async () => {
+			const postSpy = jest.spyOn(firebase, 'post');
+			const newBillForTest = {
+				id: 'M5fRN4WU0dv15Yeqlqqe',
+				vat: '80',
+				amount: 50,
+				name: 'test integration post',
+				fileName: 'bill.png',
+				commentary: 'note de frais pour test',
+				pct: 20,
+				type: 'Transports',
+				email: 'test@post.com',
+				fileUrl: 'https://via.placeholder.com/140x140',
+				date: '2020-09-11',
+				status: 'pending',
+				commentAdmin: 'test',
+			};
+			const allBills = await firebase.post(newBillForTest);
+			expect(postSpy).toHaveBeenCalledTimes(1);
+			expect(allBills.data.length).toBe(5);
+		});
+
+		test('fetches bills from an API and fails with 404 message error', async () => {
+			firebase.post.mockImplementationOnce(() =>
+				Promise.reject(new Error('Erreur 404'))
+			);
+			const html = BillsUI({ error: 'Erreur 404' });
+			document.body.innerHTML = html;
+			const message = await screen.getByText(/Erreur 404/);
+			expect(message).toBeTruthy();
+		});
+		test('fetches messages from an API and fails with 500 message error', async () => {
+			firebase.post.mockImplementationOnce(() =>
+				Promise.reject(new Error('Erreur 500'))
+			);
+			const html = BillsUI({ error: 'Erreur 500' });
+			document.body.innerHTML = html;
+			const message = await screen.getByText(/Erreur 500/);
+			expect(message).toBeTruthy();
+		});
+	});
 });
