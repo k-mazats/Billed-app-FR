@@ -177,6 +177,7 @@ describe('Given I am connected as Admin, and I am on Dashboard page, and I click
 describe('Given I am connected as Admin and I am on Dashboard page and I clicked on a bill', () => {
   describe('When I click on the icon eye', () => {
     test('A modal should open', () => {
+      $.fn.modal = jest.fn();
       Object.defineProperty(window, 'localStorage', { value: localStorageMock })
       window.localStorage.setItem('user', JSON.stringify({
         type: 'Admin'

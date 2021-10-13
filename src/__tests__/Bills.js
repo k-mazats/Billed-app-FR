@@ -86,7 +86,9 @@ describe("Given I am connected as an employee", () => {
 		});
 	});
 	describe("When I click on eye icon", () => {
+		
 		test("Then it should open the bill modal with corresponding content", () => {
+			$.fn.modal = jest.fn();
 			const html = BillsUI({ data: bills });
 			document.body.innerHTML = html;
 			const onNavigate = (pathname) => {
@@ -98,31 +100,15 @@ describe("Given I am connected as an employee", () => {
 				firestore,
 				localStorage: window.localStorage,
 			});
-
+			
 			const iconEye = screen.getAllByTestId("icon-eye");
 			const eye = iconEye[0];
-			const modaleTrigger = jest.fn(container.handleClickIconEye);
-			
-			eye.addEventListener("click", () => {
-				modaleTrigger(eye);
-			});
-			// document.addEventListener("show", () => {
-			// 	console.log("modale is working");
-			// });
 			userEvent.click(eye);
-			expect(modaleTrigger).toHaveBeenCalled();
 			const modale = screen.getByTestId("modaleFile");
 			const billUrl = eye.getAttribute("data-bill-url").split("?")[0];
 			expect(modale.innerHTML.includes(billUrl)).toBeTruthy();
 			expect(modale).toBeTruthy();
-			const modaleBootstrapFn = jest.fn($("#modaleFile").modal);
-			
-				
-				// console.log($("#modaleFile").modal);
-				// console.log(global.$.fn.modal)
-			
-			
-			expect(modaleBootstrapFn).toHaveBeenCalled();
-		});
+			expect($.fn.modal).toHaveBeenCalled();
+			});
 	});
 });
