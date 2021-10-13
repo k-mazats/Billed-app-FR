@@ -19,9 +19,7 @@ export default class NewBill {
 	handleChangeFile = (e) => {
 		const file = this.document.querySelector(`input[data-testid="file"]`)
 			.files[0];
-		const filePath = e.target.value.split(/\\/g);
-		const fileName = filePath[filePath.length - 1];
-		const fileExtension = fileName.split(".").pop();
+		const fileExtension = file.name.split('.').pop();
 		const validExtensions = ["jpg", "jpeg", "png"];
 
 		if (validExtensions.includes(fileExtension)) {
@@ -29,12 +27,12 @@ export default class NewBill {
 				e.target.classList.remove("is-invalid");
 			}
 			this.firestore.storage
-				.ref(`justificatifs/${fileName}`)
+				.ref(`justificatifs/${file.name}`)
 				.put(file)
 				.then((snapshot) => snapshot.ref.getDownloadURL())
 				.then((url) => {
 					this.fileUrl = url;
-					this.fileName = fileName;
+					this.fileName = file.name;
 				});
 		} else {
 			e.target.classList.add("is-invalid");
