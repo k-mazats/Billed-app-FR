@@ -6,7 +6,6 @@ import { ROUTES, ROUTES_PATH } from '../constants/routes';
 import { localStorageMock } from '../__mocks__/localStorage.js';
 import router from '../__mocks__/router.js';
 import firebase from '../__mocks__/firebase.js';
-import BillsUI from '../views/BillsUI.js';
 
 import NewBillUI from '../views/NewBillUI.js';
 
@@ -88,6 +87,11 @@ describe('Given I am connected as an employee', () => {
 		describe('When I submit the new bill form', () => {
 			test('Then the handleSubmit method should be called', () => {
 				const html = NewBillUI();
+				const testUser = {
+					type: 'Employee',
+					email: 'test@test.com',
+				};
+				window.localStorage.setItem('user', JSON.stringify(testUser));
 				document.body.innerHTML = html;
 				const onNavigate = (pathname) => {
 					document.body.innerHTML = ROUTES({ pathname });
@@ -101,10 +105,64 @@ describe('Given I am connected as an employee', () => {
 				const form = document.querySelector(
 					`form[data-testid="form-new-bill"]`
 				);
-				const handleSubmit = jest.fn(newBill.handleSubmit);
-				form.addEventListener('submit', handleSubmit);
+				const handleSubmitSpy = jest.spyOn(newBill, 'handleSubmit');
+				form.addEventListener('submit', handleSubmitSpy);
 				fireEvent.submit(form);
-				expect(handleSubmit).toHaveBeenCalled();
+				expect(handleSubmitSpy).toHaveBeenCalled();
+			});
+			describe('If the file is valid', () => {
+				test('Then the createBill method should be called', () => {
+					const html = NewBillUI();
+					const testUser = {
+						type: 'Employee',
+						email: 'test@test.com',
+					};
+					window.localStorage.setItem('user', JSON.stringify(testUser));
+					document.body.innerHTML = html;
+					const onNavigate = (pathname) => {
+						document.body.innerHTML = ROUTES({ pathname });
+					};
+					const newBill = new NewBill({
+						document,
+						onNavigate,
+						firestore: null,
+						localStorage: window.localStorage,
+					});
+					const form = document.querySelector(
+						`form[data-testid="form-new-bill"]`
+					);
+					const createBillSpy = jest.spyOn(newBill, 'createBill');
+					newBill.fileName = 'test';
+					fireEvent.submit(form);
+					expect(createBillSpy).toHaveBeenCalled();
+				});
+			});
+			describe('If the file is not valid', () => {
+				test('Then the createBill method should not be called', () => {
+					const html = NewBillUI();
+					const testUser = {
+						type: 'Employee',
+						email: 'test@test.com',
+					};
+					window.localStorage.setItem('user', JSON.stringify(testUser));
+					document.body.innerHTML = html;
+					const onNavigate = (pathname) => {
+						document.body.innerHTML = ROUTES({ pathname });
+					};
+					const newBill = new NewBill({
+						document,
+						onNavigate,
+						firestore: null,
+						localStorage: window.localStorage,
+					});
+					const form = document.querySelector(
+						`form[data-testid="form-new-bill"]`
+					);
+					const createBillSpy = jest.spyOn(newBill, 'createBill');
+					newBill.fileName = null;
+					fireEvent.submit(form);
+					expect(createBillSpy).not.toHaveBeenCalled();
+				});
 			});
 		});
 		describe('When I post a bill', () => {
